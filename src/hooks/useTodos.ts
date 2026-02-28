@@ -3,8 +3,9 @@ import type { Todo } from '../types/todo'
 
 
 export function useTodos(){
+  // todoを入れる箱を用意する 文字列の配列ですよという型指定 初期値は空配列
   const [todos, setTodos] = useState<Todo[]>(() => {
-    const stored = localStorage.getItem('todos-v1');
+    const stored = localStorage.getItem('todos-v1')
     if (!stored) return []
     return JSON.parse(stored)
   })
@@ -14,12 +15,15 @@ export function useTodos(){
   }, [todos])
 
   const addTodo = (text: string) => {
+    // 前後の空白を削除する 空の文字と空白は含めない
     if (text.trim() === '') return
+
     const newTodo: Todo = {
       id: crypto.randomUUID(),
       text,
       done: false,
     }
+    
     setTodos([...todos, newTodo])
   }
 
