@@ -1,6 +1,5 @@
 import { useState, useEffect} from 'react'
 import { TodoItem } from './components/TodoItem'
-import type { Todo } from './types/todo'
 import { useTodos } from './hooks/useTodos'
 
 function App() {
@@ -12,7 +11,7 @@ function App() {
   // 今の状態、状態を変更する関数
   const [inputText, setInputText] = useState('')
 
-  const {todos, addTodo, deleteTodo, toggleTodo} = useTodos()
+  const {todos, addTodo, deleteTodo, toggleTodo, loading, error} = useTodos()
 
   // 副作用を管理するためのフック。第2引数に渡した配列の中身が変わるたびに、第1引数で渡した関数が実行される。
   useEffect(() => {
@@ -33,6 +32,13 @@ function App() {
   return (
     <div>
       <h1>Todo App</h1>
+
+      {/* ローディング中表示 */}
+      {loading && <p>Loading...</p>}
+
+      {/* エラー表示 */}
+      {error && <p style={{color: 'red'}}>{error}</p>}
+
       <input 
       value={inputText} 
       onChange={(e) => setInputText(e.target.value)} 
