@@ -6,16 +6,16 @@ type Props = {
   onDelete: (id: string) => void
 }
 
-export function TodoItem({ todo, onToggleDone, onDelete}: Props){
+export function TodoItem({ todo, onToggleDone, onDelete }: Props) {
   return (
     <li>
       <input
-      type="checkbox"
-      checked={todo.done}
-      onChange={() => onToggleDone(todo.id)}
+        type="checkbox"
+        checked={todo.done}
+        onChange={() => onToggleDone(todo.id)}
       />
 
-      <span style={{textDecoration: todo.done ? 'line-through' : 'none'}}> 
+      <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>
         {todo.text}
       </span>
 

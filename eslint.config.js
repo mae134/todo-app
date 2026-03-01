@@ -17,7 +17,17 @@ export default [
         ecmaVersion: 'latest',                          // 最新のECMAScript構文をサポート
         sourceType: 'module',                           // ESモジュールを使用
       },
-      globals: globals.browser,                         // ブラウザ環境のグローバル変数をESLintに教える 
+      globals: {                                        // ブラウザ環境のグローバル変数をESLintに教える 
+      ...globals.browser,                               // document / localStorage / fetch / console が解決されるようになる。
+      ...globals.node,                                  // process / __dirname / Buffer などNode.jsのグローバル変数も解決されるようになる。
+      test: 'readonly',
+      expect: 'readonly',
+      describe: 'readonly',
+      it: 'readonly',
+      beforeEach: 'readonly',
+      afterEach: 'readonly',
+      vi: 'readonly',
+    },                     
     },
     plugins: {
       '@typescript-eslint': tseslint,                   // TypeScript用のESLintルールセット

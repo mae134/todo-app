@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    globals: true,                      // describeやtestなどのテスト関数をグローバルにする
-    setupFiles: './src/test/setup.ts',  // テスト実行前にsetup.tsを読み込む(toBeInTheDocument() が使えるようになる。)
-  }
+    globals: true, // describeやtestなどのテスト関数をグローバルにする
+    setupFiles: './src/test/setup.ts', // テスト実行前にsetup.tsを読み込む(toBeInTheDocument() が使えるようになる。)
+  },
 })

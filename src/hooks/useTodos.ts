@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Todo } from '../types/todo'
 
-
 export function useTodos() {
-
   // ローディング画面状態
   const [loading, setLoading] = useState(false)
   // エラー画面状態
@@ -21,13 +19,13 @@ export function useTodos() {
 
   useEffect(() => {
     async function load() {
-
       setLoading(true)
       setError(null)
 
       try {
-
-        const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
+        const res = await fetch(
+          'https://jsonplaceholder.typicode.com/todos?_limit=5',
+        )
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
         }
@@ -41,28 +39,31 @@ export function useTodos() {
         setLoading(false)
       }
     }
+
+    load()
   }, [])
 
   const addTodo = async (text: string) => {
     // 前後の空白を削除する 空の文字と空白は含めない
     if (text.trim() === '') return
 
-    try{
+    try {
       const res = await fetch('https://jsonplaceholder.typicode.com/todos', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text, done: false }),
       })
 
-      if(!res.ok) throw new Error('API error')
+      if (!res.ok) throw new Error('API error')
 
-        const newTodo = await res.json()
+      const newTodo = await res.json()
 
-        // サーバーが返したTodoをStateに追加
-        setTodos((prev) => [...prev, newTodo])
-    } catch(e){
+      // サーバーが返したTodoをStateに追加
+      setTodos((prev) => [...prev, newTodo])
+    } catch (e) {
+      console.error(e)
       setError('Todoの追加に失敗しました')
     }
   }
@@ -72,8 +73,11 @@ export function useTodos() {
   }
 
   const toggleTodo = (id: string) => {
-    setTodos((prev) => prev.map((todo) =>
-      todo.id === id ? { ...todo, done: !todo.done } : todo))
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo,
+      ),
+    )
   }
 
   return {
@@ -82,6 +86,6 @@ export function useTodos() {
     deleteTodo,
     toggleTodo,
     loading,
-    error
+    error,
   }
 }
