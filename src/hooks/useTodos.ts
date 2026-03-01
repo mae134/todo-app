@@ -3,7 +3,7 @@ import type { Todo } from '../types/todo'
 
 
 export function useTodos() {
-  
+
   // ローディング画面状態
   const [loading, setLoading] = useState(false)
   // エラー画面状態
@@ -43,17 +43,28 @@ export function useTodos() {
     }
   }, [])
 
-  const addTodo = (text: string) => {
+  const addTodo = async (text: string) => {
     // 前後の空白を削除する 空の文字と空白は含めない
     if (text.trim() === '') return
 
-    const newTodo: Todo = {
-      id: crypto.randomUUID(),
-      text,
-      done: false,
-    }
+    try{
+      const res = await fetch('https://jsonplaceholder.typicode.com/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text, done: false }),
+      })
 
-    setTodos([...todos, newTodo])
+      if(!res.ok) throw new Error('API error')
+
+        const newTodo = await res.json()
+
+        // サーバーが返したTodoをStateに追加
+        setTodos((prev) => [...prev, newTodo])
+    } catch(e){
+      setError('Todoの追加に失敗しました')
+    }
   }
 
   const deleteTodo = (id: string) => {
