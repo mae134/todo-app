@@ -12,7 +12,7 @@ if "%~1"=="" (
 
 echo.
 echo Running ESLint fix...
-call npm run lint:fix
+call npx eslint . --fix
 
 echo.
 echo Running Prettier format...
