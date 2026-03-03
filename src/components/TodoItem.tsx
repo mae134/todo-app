@@ -2,8 +2,8 @@ import type { Todo } from '../types/todo'
 
 type Props = {
   todo: Todo
-  onToggleDone: (id: string) => void
-  onDelete: (id: string) => void
+  onToggleDone: (id: number) => void
+  onDelete: (id: number) => void
 }
 
 export function TodoItem({ todo, onToggleDone, onDelete }: Props) {
