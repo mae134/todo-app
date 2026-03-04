@@ -1,21 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { TodoItem } from './components/TodoItem'
 import { useTodos } from './hooks/useTodos'
 
 function App() {
-  // localStorageに保存するときの「名前札」を固定する
-  const STORAGE_KEY = 'todos-v1'
-
-  // 配列の分割代入で、useStateの返り値をinputTextとsetInputTextに代入する
   // 今の状態、状態を変更する関数
   const [inputText, setInputText] = useState('')
 
-  const { todos, addTodo, deleteTodo, toggleTodo, loading, error } = useTodos()
-
-  // 副作用を管理するためのフック。第2引数に渡した配列の中身が変わるたびに、第1引数で渡した関数が実行される。
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-  }, [todos]) // この中に書いた値が変わったときだけ、useEffectを実行する
+  const {
+    todos,
+    addTodo,
+    deleteTodo,
+    toggleTodo,
+    loading,
+    adding,
+    deletingId,
+    togglingId,
+    error,
+  } = useTodos()
 
   // ボタンが押されたときに実行する関数
   const handleAdd = () => {
@@ -45,7 +46,9 @@ function App() {
         }}
       />
 
-      <button onClick={handleAdd}>Add</button>
+      <button onClick={handleAdd} disabled={adding}>
+        {adding ? 'Adding...' : 'Add'}
+      </button>
 
       <p>inputText: {inputText}</p>
       <ul>
@@ -55,6 +58,8 @@ function App() {
             todo={todo}
             onToggleDone={toggleTodo}
             onDelete={deleteTodo}
+            deletingId={deletingId}
+            togglingId={togglingId}
           />
         ))}
       </ul>

@@ -4,6 +4,12 @@ import type { Todo } from '../types/todo'
 export function useTodos() {
   // APIのベースURL
   const API_BASE_URL = 'http://localhost:3001/todos'
+  // 新しいTodoを追加中かどうかの状態
+  const [adding, setAdding] = useState(false)
+  // 削除中のTodoのIDを保持する状態
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  // 完了状態を切り替え中のTodoのIDを保持する状態
+  const [togglingId, setTogglingId] = useState<number | null>(null)
   // ローディング画面状態
   const [loading, setLoading] = useState(false)
   // エラー画面状態
@@ -41,6 +47,9 @@ export function useTodos() {
     // 前後の空白を削除する 空の文字と空白は含めない
     if (text.trim() === '') return
 
+    setAdding(true)
+    setError(null)
+
     try {
       const res = await fetch(API_BASE_URL, {
         method: 'POST',
@@ -59,13 +68,15 @@ export function useTodos() {
     } catch (e) {
       console.error(e)
       setError('Todoの追加に失敗しました')
+    } finally {
+      setAdding(false)
     }
   }
 
   // DELETE: Todoを削除する関数
   const deleteTodo = async (id: number) => {
     try {
-      setLoading(true)
+      setDeletingId(id)
       setError(null)
 
       const res = await fetch(`${API_BASE_URL}/${id}`, {
@@ -82,7 +93,7 @@ export function useTodos() {
       console.error(e)
       setError('Todoの削除に失敗しました')
     } finally {
-      setLoading(false)
+      setDeletingId(null)
     }
   }
 
@@ -91,11 +102,11 @@ export function useTodos() {
     const target = todos.find((todo) => todo.id === id)
     if (!target) return
 
-    setLoading(true)
+    setTogglingId(id)
     setError(null)
 
     try {
-      const res = await fetch('${API_BASE_URL}/${id}', {
+      const res = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +126,7 @@ export function useTodos() {
       console.error(error)
       setError('Todoの更新に失敗しました')
     } finally {
-      setLoading(false)
+      setTogglingId(null)
     }
   }
 
@@ -125,6 +136,9 @@ export function useTodos() {
     deleteTodo,
     toggleTodo,
     loading,
+    adding,
+    deletingId,
+    togglingId,
     error,
   }
 }
