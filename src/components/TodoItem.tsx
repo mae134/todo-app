@@ -16,21 +16,28 @@ export function TodoItem({
   togglingId,
 }: Props) {
   return (
-    <li>
-      <input
-        type="checkbox"
-        checked={todo.done}
-        disabled={togglingId === todo.id}
-        onChange={() => onToggleDone(todo.id)}
-      />
+    <li className="flex itemmx-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+      <label className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          checked={todo.done}
+          disabled={togglingId === todo.id}
+          onChange={() => onToggleDone(todo.id)}
+        />
 
-      <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>
-        {todo.text}
-      </span>
+        <span
+          className={
+            todo.done ? 'text-slate-400 line-through' : 'text-slate-800'
+          }
+        >
+          {todo.text}
+        </span>
+      </label>
 
       <button
         onClick={() => onDelete(todo.id)}
         disabled={deletingId === todo.id}
+        className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 translation hover:bg-slate-100 disabled:cursor-not -allowed disabled:opacity-50"
       >
         {deletingId === todo.id ? 'Deleting...' : 'Delete'}
       </button>
