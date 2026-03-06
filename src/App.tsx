@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div>
-      <h1>Todo App</h1>
+      <h1 className="text-3xl font-bold text-blue-600">Todo App</h1>
 
       {/* ローディング中表示 */}
       {loading && <p>Loading...</p>}

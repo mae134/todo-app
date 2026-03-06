@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import type { Todo } from '../types/todo'
+import { API_BASE_URL } from '../api/config'
 
 export function useTodos() {
-  // APIのベースURL
-  const API_BASE_URL = 'http://localhost:3001/todos'
   // 新しいTodoを追加中かどうかの状態
   const [adding, setAdding] = useState(false)
   // 削除中のTodoのIDを保持する状態
@@ -32,7 +31,7 @@ export function useTodos() {
         const data = (await res.json()) as Todo[]
         setTodos(data)
       } catch (error) {
-        setError('データ取得に失敗しました')
+        setError('Failed to get todo')
         console.error(error)
       } finally {
         setLoading(false)
@@ -67,7 +66,7 @@ export function useTodos() {
       setTodos((prev) => [...prev, newTodo])
     } catch (e) {
       console.error(e)
-      setError('Todoの追加に失敗しました')
+      setError('Failed to add todo')
     } finally {
       setAdding(false)
     }
@@ -91,7 +90,7 @@ export function useTodos() {
       setTodos((prev) => prev.filter((todo) => todo.id !== id))
     } catch (e) {
       console.error(e)
-      setError('Todoの削除に失敗しました')
+      setError('Failed to delete todo')
     } finally {
       setDeletingId(null)
     }
@@ -124,7 +123,7 @@ export function useTodos() {
       )
     } catch (error) {
       console.error(error)
-      setError('Todoの更新に失敗しました')
+      setError('Failed to update todo')
     } finally {
       setTogglingId(null)
     }
