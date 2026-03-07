@@ -63,7 +63,8 @@ function App() {
               if (e.key === 'Enter') handleAdd()
             }}
             placeholder="Add a new task"
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 outline-none"
+            // 入力欄のフォーカスuiを整える
+            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 outline-none focus:ring focus:border"
           />
 
           <button

@@ -16,8 +16,8 @@ export function TodoItem({
   togglingId,
 }: Props) {
   return (
-    // 横並び / 縦方向の位置を中央に揃える / 左右の端に分ける / 角丸 / 薄い枠線を付ける / 風刺背景色 / 内側の余白(padding)
-    <li className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+    // 横並び / 縦方向の位置を中央に揃える / 左右の端に分ける / 角丸 / 薄い枠線を付ける / 風刺背景色 / 内側の余白(padding) / ホバーで背景色を変える
+    <li className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100">
       {/* checkboxとtextを横並びにする / checkboxとtextの高さを中央揃えにする / checkboxと文字の間のすき間を作る。 */}
       <label className="flex items-center gap-3">
         <input
