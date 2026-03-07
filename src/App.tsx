@@ -61,23 +61,21 @@ function App() {
           <button
             onClick={handleAdd}
             disabled={adding}
-            className="rounded-xl bg-slate-800 px-5 py-3 text-white translation hover:bg-slate-700"
+            className="rounded-xl bg-slate-800 px-5 py-3 text-white transition hover:bg-slate-700"
           >
             {adding ? 'Adding...' : 'Add'}
           </button>
         </div>
-
-        <p>inputText: {inputText}</p>
 
         <div className="mb-6 flex flex-wrap gap-2">
           <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
             Total: {totalCount}
           </span>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-green-600">
-            Completed: {activeCount}
+            Completed: {completedCount}
           </span>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
-            Active: {completedCount}
+            Active: {activeCount}
           </span>
         </div>
 
