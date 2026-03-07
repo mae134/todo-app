@@ -42,10 +42,18 @@ function App() {
         </div>
 
         {/* ローディング中表示 */}
-        {loading && <p>Loading...</p>}
+        {loading && (
+          <p className="mb-4 rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
+            Loading...
+          </p>
+        )}
 
         {/* エラー表示 */}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && (
+          <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
         <div className="mb-6 flex gap-3">
           <input
@@ -79,19 +87,30 @@ function App() {
           </span>
         </div>
 
-        {/* 子要素同士の間に縦の余白を入れる */}
-        <ul className="space-y-3">
-          {sortedTodos.map((todo) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggleDone={toggleTodo}
-              onDelete={deleteTodo}
-              deletingId={deletingId}
-              togglingId={togglingId}
-            />
-          ))}
-        </ul>
+        {/* タスクリストがないなら空状態UI表示 */}
+        {sortedTodos.length === 0 ? (
+          // 大き目角丸 / 枠線をつける / 点線っぽい枠(空の状態をやわらかく見せやすい) / 薄いグレー枠 / 内側の余白 / テキストを中央揃え
+          <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center">
+            {/* 大き目の文字 / 太字 / 落ち着いた色 */}
+            <p className="text-lg font-medium text-slate-600">No tasks yet</p>
+            {/* 上に少し余白 / 小さめ文字 / 薄い文字色 */}
+            <p className="mt-2 text-sm text-slate-400">Add your first task</p>
+          </div>
+        ) : (
+          // タスクリスト表示
+          <ul className="space-y-3">
+            {sortedTodos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onToggleDone={toggleTodo}
+                onDelete={deleteTodo}
+                deletingId={deletingId}
+                togglingId={togglingId}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
