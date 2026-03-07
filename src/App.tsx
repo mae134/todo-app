@@ -25,11 +25,15 @@ function App() {
     setInputText('')
   }
 
+  const totalCount = todos.length
+  const completedCount = todos.filter((todo) => todo.done).length
+  const activeCount = totalCount - completedCount
+
   // aがtrueならb(未完了)を前にbがtrueならa(未完了)を前にする
   const sortedTodos = [...todos].sort((a, b) => Number(a.done) - Number(b.done))
 
   return (
-    // 画面の高さを最低限確保する 薄いグレー背景　白いカードを目立たせる　左右の余白　スマホで端にくっつかないようにする　上下の余白　詰まって見えないようにする
+    // 画面の高さを最低限確保する / 薄いグレー背景 / 左右の余白 / スマホで端にくっつかないようにする / 上下の余白 / 詰まって見えないようにする
     <div className="min-h-screen bg-slate-100 px-4 py-10">
       <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
         <div className="mb-6">
@@ -64,7 +68,21 @@ function App() {
         </div>
 
         <p>inputText: {inputText}</p>
-        <ul>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
+            Total: {totalCount}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-green-600">
+            Completed: {activeCount}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
+            Active: {completedCount}
+          </span>
+        </div>
+
+        {/* 子要素同士の間に縦の余白を入れる */}
+        <ul className="space-y-3">
           {sortedTodos.map((todo) => (
             <TodoItem
               key={todo.id}
