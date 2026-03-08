@@ -5,6 +5,8 @@ import { useTodos } from './hooks/useTodos'
 function App() {
   // 今の状態、状態を変更する関数
   const [inputText, setInputText] = useState('')
+  // 今のフィルター状態、状態を変更する関数。all,active,completedのみ文字列のセッターを受け付ける
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
 
   const {
     todos,
@@ -31,6 +33,20 @@ function App() {
 
   // aがtrueならb(未完了)を前にbがtrueならa(未完了)を前にする
   const sortedTodos = [...todos].sort((a, b) => Number(a.done) - Number(b.done))
+
+  // フィルター処理
+  const filteredTodos = sortedTodos.filter((todo) => {
+    if (filter === 'active') return !todo.done
+    if (filter === 'completed') return todo.done
+    return true
+  })
+
+  // フィルターボタン選択プロパティ
+  const filterOptions = [
+    { label: 'All', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'Completed', value: 'completed' },
+  ] as const
 
   return (
     // 画面の高さを最低限確保する / 薄いグレー背景 / 左右の余白 / スマホで端にくっつかないようにする / 上下の余白 / 詰まって見えないようにする
@@ -69,7 +85,7 @@ function App() {
 
           <button
             onClick={handleAdd}
-            disabled={adding}
+            disabled={adding || !inputText.trim()}
             className="rounded-xl bg-slate-800 px-5 py-3 text-white transition hover:bg-slate-700"
           >
             {adding ? 'Adding...' : 'Add'}
@@ -88,8 +104,24 @@ function App() {
           </span>
         </div>
 
+        <div className="mb-6 flex gap-2">
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setFilter(option.value)}
+              className={`rounded-full px-3 py-1 text-sm transition ${
+                filter === option.value
+                  ? 'bg-slate-800 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
         {/* タスクリストがないなら空状態UI表示 */}
-        {sortedTodos.length === 0 ? (
+        {filteredTodos.length === 0 ? (
           // 大き目角丸 / 枠線をつける / 点線っぽい枠(空の状態をやわらかく見せやすい) / 薄いグレー枠 / 内側の余白 / テキストを中央揃え
           <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center">
             {/* 大き目の文字 / 太字 / 落ち着いた色 */}
@@ -100,7 +132,7 @@ function App() {
         ) : (
           // タスクリスト表示
           <ul className="space-y-3">
-            {sortedTodos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <TodoItem
                 key={todo.id}
                 todo={todo}
