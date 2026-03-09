@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import type { Todo } from '../types/todo'
 
 type Props = {
@@ -22,6 +22,15 @@ export function TodoItem({
   const [isEditing, setIsEditing] = useState(false)
   // 今の編集内容状態、編集内容を変更する関数
   const [editText, setEditText] = useState(todo.text)
+  // 入力参照
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    // inputがまだ出ていない可能性があるので、次のタイミングで編集領域をフォーカス
+    if (isEditing) {
+      inputRef.current?.focus()
+    }
+  }, [isEditing])
 
   // 編集モードにする
   const handleStartEdit = () => {
@@ -49,9 +58,13 @@ export function TodoItem({
 
   return (
     // 横並び / 縦方向の位置を中央に揃える / 左右の端に分ける / 角丸 / 薄い枠線を付ける / 風刺背景色 / 内側の余白(padding) / ホバーで背景色を変える
-    <li className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100">
+    <li
+      className={`flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 transition-colors ${
+        isEditing ? 'bg-white' : 'bg-slate-50 hover:bg-slate-100'
+      }`}
+    >
       {/* checkboxとtextを横並びにする / checkboxとtextの高さを中央揃えにする / checkboxと文字の間のすき間を作る。 */}
-      <label className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
         {/* タスク完了切り替えボックス */}
         <input
           type="checkbox"
@@ -64,24 +77,29 @@ export function TodoItem({
         {isEditing ? (
           <input
             value={editText}
+            ref={inputRef}
             onChange={(e) => setEditText(e.target.value)}
             onKeyDown={(e) => {
+              // キー操作で編集可能にする
               if (e.key === 'Enter') handleSave()
+              if (e.key === 'Escape') handleCancel()
             }}
-            className="rounded-md border border-slate-300 px-2 py-1 text-slate-800 outline-none focus:ring focus:border"
+            className="w-full rounded-md border border-slate-300 px-2 py-1 text-slate-800 outline-none focus:ring focus:border"
           />
         ) : (
           <span
             className={
-              todo.done ? 'text-slate-400 line-through' : 'text-slate-800'
+              todo.done
+                ? 'truncate text-slate-400 line-through'
+                : 'truncate text-slate-800'
             }
           >
             {todo.text}
           </span>
         )}
-      </label>
+      </div>
 
-      <div className="flex gap-2">
+      <div className="flex shrink-0 gap-2">
         {isEditing ? (
           // 一つの要素しか返せないので、React.Fragmentをかえす
           <>
