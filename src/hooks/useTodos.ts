@@ -117,6 +117,7 @@ export function useTodos() {
         throw new Error(`HTTP ${res.status}`)
       }
 
+      // 表示更新
       const updatedTodo = (await res.json()) as Todo
       setTodos((prev) =>
         prev.map((todo) => (todo.id === id ? updatedTodo : todo)),
@@ -129,11 +130,43 @@ export function useTodos() {
     }
   }
 
+  const updateTodoText = async (id: number, newText: string) => {
+    const trimmedText = newText.trim()
+    const target = todos.find((todo) => todo.id === id)
+    if (!target) return
+
+    setError(null)
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: trimmedText }),
+      })
+
+      if (!res.ok) {
+        throw new Error('HTTP ${res.status}')
+      }
+
+      // 表示更新
+      const updateTodo = (await res.json()) as Todo
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === id ? updateTodo : todo)),
+      )
+    } catch (error) {
+      console.log(error)
+      setError('Failed to update todo')
+    }
+  }
+
   return {
     todos,
     addTodo,
     deleteTodo,
     toggleTodo,
+    updateTodoText,
     loading,
     adding,
     deletingId,

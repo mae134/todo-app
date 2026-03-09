@@ -3,7 +3,7 @@ import { TodoItem } from './components/TodoItem'
 import { useTodos } from './hooks/useTodos'
 
 function App() {
-  // 今の状態、状態を変更する関数
+  // 今の入力内容状態、状態を変更する関数
   const [inputText, setInputText] = useState('')
   // 今のフィルター状態、状態を変更する関数。all,active,completedのみ文字列のセッターを受け付ける
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
@@ -13,6 +13,7 @@ function App() {
     addTodo,
     deleteTodo,
     toggleTodo,
+    updateTodoText,
     loading,
     adding,
     deletingId,
@@ -138,6 +139,7 @@ function App() {
                 todo={todo}
                 onToggleDone={toggleTodo}
                 onDelete={deleteTodo}
+                onUpdateTodoText={updateTodoText}
                 deletingId={deletingId}
                 togglingId={togglingId}
               />
