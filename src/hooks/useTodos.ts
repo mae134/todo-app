@@ -147,7 +147,7 @@ export function useTodos() {
       })
 
       if (!res.ok) {
-        throw new Error('HTTP ${res.status}')
+        throw new Error(`HTTP ${res.status}`)
       }
 
       // 表示更新

@@ -28,9 +28,21 @@ function App() {
     setInputText('')
   }
 
+  const handleClearComplete = async () => {
+    const completedTodos = todos.filter((todo) => todo.done)
+
+    for (const todo of completedTodos) {
+      await deleteTodo(todo.id)
+    }
+  }
+
   const totalCount = todos.length
   const completedCount = todos.filter((todo) => todo.done).length
   const activeCount = totalCount - completedCount
+
+  // 完了済みの進捗率
+  const progressPercent =
+    totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100)
 
   // aがtrueならb(未完了)を前にbがtrueならa(未完了)を前にする
   const sortedTodos = [...todos].sort((a, b) => Number(a.done) - Number(b.done))
@@ -93,6 +105,7 @@ function App() {
           </button>
         </div>
 
+        {/* タスクカウント表示 */}
         <div className="mb-6 flex flex-wrap gap-2">
           <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
             Total: {totalCount}
@@ -105,6 +118,34 @@ function App() {
           </span>
         </div>
 
+        {/* 完了済みタスクの進捗バー */}
+        <div className="mb-6">
+          <div className="mb-2 flex items-center justify-between text-sm text-slate-600">
+            <span>Progress</span>
+            <span>{progressPercent}% completed</span>
+          </div>
+
+          <div className="h-2 w-full rounded-full bg-slate-200">
+            <div
+              className="h-2 rounded-full bg-slate-800 transition-all"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* 完了済みのタスクを削除するボタン */}
+        {completedCount > 0 && (
+          <div className="mb-6">
+            <button
+              onClick={handleClearComplete}
+              className="rounded-lg border border-red-200 px-3 py-2 text-sm text-red-500 transition hover:bg-red-50"
+            >
+              Clear completed ({completedCount})
+            </button>
+          </div>
+        )}
+
+        {/* フィルターボタンリスト */}
         <div className="mb-6 flex gap-2">
           {filterOptions.map((option) => (
             <button
