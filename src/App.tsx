@@ -172,20 +172,23 @@ function App() {
             <p className="mt-2 text-sm text-slate-400">Add your first task</p>
           </div>
         ) : (
-          // タスクリスト表示
-          <ul className="space-y-3">
-            {filteredTodos.map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                onToggleDone={toggleTodo}
-                onDelete={deleteTodo}
-                onUpdateTodoText={updateTodoText}
-                deletingId={deletingId}
-                togglingId={togglingId}
-              />
-            ))}
-          </ul>
+          // スクロール範囲を固定
+          <div className="max-h-96 overflow-y-auto pr-1">
+            {/* タスクリスト表示 */}
+            <ul className="space-y-3">
+              {filteredTodos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  onToggleDone={toggleTodo}
+                  onDelete={deleteTodo}
+                  onUpdateTodoText={updateTodoText}
+                  deletingId={deletingId}
+                  togglingId={togglingId}
+                />
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>
