@@ -10,7 +10,7 @@ import prettierConfig from 'eslint-config-prettier' // Prettierと競合するES
 export default [
   js.configs.recommended, // JavaScript用のESLintルールセット
   {
-    files: ['**/*.{ts,tsx}'], // TypeScriptファイルに対してのルールを適用
+    files: ['**/*.{ts,tsx,js,mjs}'], // TypeScriptファイルに対してのルールを適用
     languageOptions: {
       parser: tsParser, // TypeScriptコードをESLintが理解できるようにするためのパーサー
       parserOptions: {
@@ -21,6 +21,7 @@ export default [
         // ブラウザ環境のグローバル変数をESLintに教える
         ...globals.browser, // document / localStorage / fetch / console が解決されるようになる。
         ...globals.node, // process / __dirname / Buffer などNode.jsのグローバル変数も解決されるようになる。
+        fetch: 'readonly',
         test: 'readonly',
         expect: 'readonly',
         describe: 'readonly',
