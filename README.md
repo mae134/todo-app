@@ -104,7 +104,6 @@ node scripts/seedDb.mjs
 node scripts/resetDb.mjs
 ```
 
-
 ## Project Structure
 
 ```
@@ -133,15 +132,19 @@ todo-app
 This project uses json-server as a mock API.
 
 ### GET /todos
+
 Fetch all todos.
 
 ### POST /todos
+
 Create a new todo.
 
 ### PATCH /todos/:id
+
 Update a todo.
 
 ### DELETE /todos/:id
+
 Delete a todo.
 
 ## Architecture
