@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const dbPath = path.resolve('db.json')
+const dbPath = path.resolve('../todo-local-db/db.json')
 
 async function resetDb() {
   try {
@@ -18,6 +18,7 @@ async function resetDb() {
     console.log('done: todos cleared (0 items)')
   } catch (error) {
     console.error('resetDb failed:', error)
+    // 一般的なエラー終了
     process.exit(1)
   }
 }

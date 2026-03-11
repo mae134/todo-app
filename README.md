@@ -1,73 +1,151 @@
-# React + TypeScript + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+A simple Todo management application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Users can create, edit, and complete tasks through a clean UI.
 
-## React Compiler
+Built with React, TypeScript, and json-server to implement basic CRUD operations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Screenshot
 
-## Expanding the ESLint configuration
+![Todo App](./docs/screenshot.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Demo
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Live demo: coming soon.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Local development:
+
+```
+http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Add tasks
+- Delete tasks
+- Toggle task completion
+- Edit tasks
+- Filter tasks (All / Active / Completed)
+- Clear completed tasks
+- Progress bar
+- Scrollable todo list
+- Loading / error states
+
+## Tech Stack
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- json-server
+- ESLint
+
+## Setup
+
+### 1. Clone repository
+
+```bash
+git clone https://github.com/mae134/todo-app.git
+cd todo-app
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Create local database
+
+```bash
+cp db.example.json ../todo-local-db/db.json
+```
+
+### 4. Start API server
+
+```bash
+npm run api
+```
+
+json-server runs at the following endpoint:
+
+```
+http://localhost:3001/todos
+```
+
+### 5. Start frontend
+
+```bash
+npm run dev
+```
+
+```
+http://localhost:5173
+```
+
+## Database Utilities
+
+### Generate database
+
+```bash
+node scripts/seedDb.mjs
+```
+
+### Reset database
+
+```bash
+node scripts/resetDb.mjs
+```
+
+
+## Project Structure
+
+```
+todo-app
+├ docs
+│ └ screenshot.png
+├ src
+│ ├ components
+│ │ └ TodoItem.tsx
+│ ├ hooks
+│ │ └ useTodos.ts
+│ ├ api
+│ └ App.tsx
+│
+├ scripts
+│ ├ seedDb.mjs
+│ └ resetDb.mjs
+│
+├ db.example.json
+├ package.json
+└ README.md
+```
+
+## API
+
+This project uses json-server as a mock API.
+
+### GET /todos
+Fetch all todos.
+
+### POST /todos
+Create a new todo.
+
+### PATCH /todos/:id
+Update a todo.
+
+### DELETE /todos/:id
+Delete a todo.
+
+## Architecture
+
+- React functional components
+- Custom hook (`useTodos`) for API logic
+- json-server used as a mock backend

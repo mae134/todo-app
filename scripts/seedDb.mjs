@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const dbPath = path.resolve('db.json')
+const dbPath = path.resolve('../todo-local-db/db.json')
 
 const tasks = [
   'Buy milk',
@@ -40,5 +40,6 @@ async function seedDb(count = 20) {
 
 seedDb(20).catch((error) => {
   console.error('seedDb failed:', error)
+  // 一般的なエラー終了
   process.exit(1)
 })
