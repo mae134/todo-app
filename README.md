@@ -40,12 +40,14 @@ http://localhost:5173
 
 ## Tech Stack
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- json-server
-- ESLint
+| Technology   | Purpose                 |
+| ------------ | ----------------------- |
+| React        | UI                      |
+| TypeScript   | Type safety             |
+| Vite         | Development environment |
+| Tailwind CSS | Styling                 |
+| json-server  | Mock API                |
+| ESLint       | Linting                 |
 
 ## Setup
 
@@ -63,6 +65,14 @@ npm install
 ```
 
 ### 3. Create local database
+
+Create a directory for the local database:
+
+```bash
+mkdir ../todo-local-db
+```
+
+Copy the example database file:
 
 ```bash
 cp db.example.json ../todo-local-db/db.json
@@ -104,8 +114,22 @@ node scripts/seedDb.mjs
 node scripts/resetDb.mjs
 ```
 
-
 ## Project Structure
+
+src/components  
+UI components
+
+src/hooks  
+Custom hooks for API and state management
+
+src/api  
+API configuration
+
+scripts  
+Database utility scripts
+
+docs  
+Project screenshots
 
 ```
 todo-app
@@ -133,19 +157,60 @@ todo-app
 This project uses json-server as a mock API.
 
 ### GET /todos
+
 Fetch all todos.
 
 ### POST /todos
+
 Create a new todo.
 
 ### PATCH /todos/:id
+
 Update a todo.
 
 ### DELETE /todos/:id
+
 Delete a todo.
 
 ## Architecture
 
 - React functional components
-- Custom hook (`useTodos`) for API logic
+- Custom hook (useTodos) for API logic
 - json-server used as a mock backend
+- UI and state logic are separated into components and hooks
+
+## Notes
+
+After running the database seed script, refresh the browser to load the new todo data.
+
+```bash
+node scripts/seedDb.mjs
+```
+
+The API server and frontend server keep running in the terminal.
+
+Use separate terminal tabs or windows when running commands.
+
+Recommended terminal setup:
+
+Terminal 1
+
+```bash
+npm run api
+```
+
+Terminal 2
+
+```bash
+npm run dev
+```
+
+Terminal 3 (optional)
+
+```bash
+node scripts/seedDb.mjs
+```
+
+## License
+
+This project is for learning and portfolio purposes.
