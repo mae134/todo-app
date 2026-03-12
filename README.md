@@ -18,12 +18,6 @@ Built with React, TypeScript, and json-server to implement basic CRUD operations
 
 Live demo: coming soon.
 
-Local development:
-
-```
-http://localhost:5173
-```
-
 ---
 
 ## Features
@@ -64,49 +58,21 @@ cd todo-app
 npm install
 ```
 
-### 3. Create local database
-
-Create a directory for the local database:
+### 3. Application launch
 
 ```bash
-mkdir ../todo-local-db
-```
-
-Copy the example database file:
-
-```bash
-cp db.example.json ../todo-local-db/db.json
-```
-
-### 4. Start API server
-
-```bash
-npm run api
-```
-
-json-server runs at the following endpoint:
-
-```
-http://localhost:3001/todos
-```
-
-### 5. Start frontend
-
-```bash
-npm run dev
-```
-
-```
-http://localhost:5173
+npm run app
 ```
 
 ## Database Utilities
 
-### Generate database
+### Generate sample todos
 
 ```bash
 node scripts/seedDb.mjs
 ```
+
+Adds sample todo data to the database.
 
 ### Reset database
 
@@ -114,22 +80,24 @@ node scripts/seedDb.mjs
 node scripts/resetDb.mjs
 ```
 
+Resets the database to its initial state.
+
 ## Project Structure
 
-src/components  
-UI components
+- `src/components`  
+  UI components
 
-src/hooks  
-Custom hooks for API and state management
+- `src/hooks`  
+  Custom hooks for API and state management
 
-src/api  
-API configuration
+- `src/api`  
+  API configuration
 
-scripts  
-Database utility scripts
+- `scripts`  
+  Database utility scripts
 
-docs  
-Project screenshots
+- `docs`  
+  Project screenshots
 
 ```
 todo-app
@@ -181,17 +149,9 @@ Delete a todo.
 
 ## Notes
 
-After running the database seed script, refresh the browser to load the new todo data.
+The `npm run app` command starts both the API server and the frontend using `concurrently`.
 
-```bash
-node scripts/seedDb.mjs
-```
-
-The API server and frontend server keep running in the terminal.
-
-Use separate terminal tabs or windows when running commands.
-
-Recommended terminal setup:
+If you want to run them manually:
 
 Terminal 1
 
@@ -205,11 +165,13 @@ Terminal 2
 npm run dev
 ```
 
-Terminal 3 (optional)
+To generate sample todos:
 
 ```bash
 node scripts/seedDb.mjs
 ```
+
+After generating sample todos, refresh the browser to load the new data.
 
 ## License
 
