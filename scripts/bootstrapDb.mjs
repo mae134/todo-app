@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 // DBフォルダのパスを決める 絶対パスを取得
 const dbDir = path.resolve('../todo-local-db')
