@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import type { Todo } from '../types/todo'
-import { API_BASE_URL } from '../api/config'
+
+import {
+  createTodo,
+  getTodos,
+  removeTodo,
+  updateTodoDone,
+  updateTodoText as updateTodoTextApi,
+} from '../api/todos'
 
 export function useTodos() {
   // 新しいTodoを追加中かどうかの状態
@@ -23,13 +30,10 @@ export function useTodos() {
       setError(null)
 
       try {
-        const res = await fetch(API_BASE_URL)
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`)
-        }
+        const res = await getTodos()
 
-        const data = (await res.json()) as Todo[]
-        setTodos(data)
+        // 既存todo追加
+        setTodos(res)
       } catch (error) {
         setError('Failed to get todo')
         console.error(error)
@@ -50,20 +54,10 @@ export function useTodos() {
     setError(null)
 
     try {
-      const res = await fetch(API_BASE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text, done: false }),
-      })
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-
-      const newTodo = (await res.json()) as Todo
+      const res = await createTodo(text)
 
       // サーバーが返したTodoをStateに追加
-      setTodos((prev) => [...prev, newTodo])
+      setTodos((prev) => [...prev, res])
     } catch (e) {
       console.error(e)
       setError('Failed to add todo')
@@ -78,13 +72,8 @@ export function useTodos() {
       setDeletingId(id)
       setError(null)
 
-      const res = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'DELETE',
-      })
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
+      // todo削除
+      await removeTodo(id)
 
       // サーバー削除が成功したら、画面からも消す
       setTodos((prev) => prev.filter((todo) => todo.id !== id))
@@ -105,23 +94,10 @@ export function useTodos() {
     setError(null)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ done: !target.done }),
-      })
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-
       // 表示更新
-      const updatedTodo = (await res.json()) as Todo
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === id ? updatedTodo : todo)),
-      )
+      const res = await updateTodoDone(id, !target.done)
+
+      setTodos((prev) => prev.map((todo) => (todo.id === id ? res : todo)))
     } catch (error) {
       console.error(error)
       setError('Failed to update todo')
@@ -133,28 +109,15 @@ export function useTodos() {
   const updateTodoText = async (id: number, newText: string) => {
     const trimmedText = newText.trim()
     const target = todos.find((todo) => todo.id === id)
-    if (!target) return
+    if (!target || !trimmedText) return
 
     setError(null)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: trimmedText }),
-      })
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
+      const res = await updateTodoTextApi(id, trimmedText)
 
       // 表示更新
-      const updateTodo = (await res.json()) as Todo
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === id ? updateTodo : todo)),
-      )
+      setTodos((prev) => prev.map((todo) => (todo.id === id ? res : todo)))
     } catch (error) {
       console.log(error)
       setError('Failed to update todo')
