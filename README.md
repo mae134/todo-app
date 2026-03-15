@@ -16,7 +16,8 @@ Built with React, TypeScript, and json-server to implement basic CRUD operations
 
 ## Demo
 
-Live demo: coming soon.
+Live demo:
+https://todo-app-kohl-mu-20.vercel.app/
 
 ---
 
