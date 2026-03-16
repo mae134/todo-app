@@ -6,16 +6,16 @@ export async function getTodos(): Promise<Todo[]> {
   const { data, error } = await supabase
     .from('todos')
     .select('*')
-    .order('id', { ascending: true })
+    .order('created_at', { ascending: false })
 
   if (error) throw error
   return data ?? []
 }
 
-export async function createTodo(text: string): Promise<Todo> {
+export async function createTodo(text: string, userId: string): Promise<Todo> {
   const { data, error } = await supabase
     .from('todo')
-    .insert([{ text, done: false }])
+    .insert([{ text, done: false, user_id: userId }])
     .select()
     .single()
 

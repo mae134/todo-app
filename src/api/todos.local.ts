@@ -14,7 +14,7 @@ export async function createTodo(text: string): Promise<Todo> {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ text, done: false }),
+    body: JSON.stringify({ text, done: false, user_id: 'local-user' }),
   })
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`)

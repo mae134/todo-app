@@ -35,14 +35,35 @@ https://todo-app-kohl-mu-20.vercel.app/
 
 ## Tech Stack
 
-| Technology   | Purpose                 |
-| ------------ | ----------------------- |
-| React        | UI                      |
-| TypeScript   | Type safety             |
-| Vite         | Development environment |
-| Tailwind CSS | Styling                 |
-| json-server  | Mock API                |
-| ESLint       | Linting                 |
+| Technology   | Purpose                      |
+| ------------ | ---------------------------- |
+| React        | UI                           |
+| TypeScript   | Type safety                  |
+| Vite         | Development environment      |
+| Tailwind CSS | Styling                      |
+| json-server  | Mock API                     |
+| ESLint       | Linting                      |
+| Supabase     | Database / Auth / API        |
+| json-server  | Local mock API (development) |
+
+## Environment Variables
+
+This project requires Supabase environment variables.
+
+Create a `.env.local` file in the project root and add the following:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+You can copy the example file:
+
+```bash
+cp .env.example .env.local
+```
+
+Then fill in the values.
 
 ## Setup
 

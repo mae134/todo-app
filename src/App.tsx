@@ -1,8 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TodoItem } from './components/TodoItem'
 import { useTodos } from './hooks/useTodos'
+import type { User } from '@supabase/supabase-js'
+import { supabase } from './lib/supabase'
+import { AuthForm } from './components/AuthForm'
 
 function App() {
+  // ユーザー情報の状態
+  const [user, setUser] = useState<User | null>(null)
   // 今の入力内容状態、状態を変更する関数
   const [inputText, setInputText] = useState('')
   // 今のフィルター状態、状態を変更する関数。all,active,completedのみ文字列のセッターを受け付ける
@@ -19,7 +24,34 @@ function App() {
     deletingId,
     togglingId,
     error,
-  } = useTodos()
+  } = useTodos(user)
+
+  useEffect(() => {
+    async function loadUser() {
+      // ユーザー情報を取得
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      setUser(user)
+    }
+
+    loadUser()
+
+    // ログイン状態が変わったらuserを更新する
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // ログアウトボタンが押されたときに実行する関数
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+  }
 
   // ボタンが押されたときに実行する関数
   const handleAdd = () => {
@@ -28,6 +60,15 @@ function App() {
     setInputText('')
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-100 px-4 py-10">
+        <AuthForm />
+      </div>
+    )
+  }
+
+  // 完了済みタスクを削除するボタンが押されたときに実行する関数
   const handleClearComplete = async () => {
     const completedTodos = todos.filter((todo) => todo.done)
 
@@ -54,7 +95,7 @@ function App() {
     return true
   })
 
-  // フィルターボタン選択プロパティ
+  // フィルターボタン選択プロパティの配列
   const filterOptions = [
     { label: 'All', value: 'all' },
     { label: 'Active', value: 'active' },
@@ -65,9 +106,16 @@ function App() {
     // 画面の高さを最低限確保する / 薄いグレー背景 / 左右の余白 / スマホで端にくっつかないようにする / 上下の余白 / 詰まって見えないようにする
     <div className="min-h-screen bg-slate-100 px-4 py-10">
       <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-800">Todo App</h1>
-          <p className="text-sm text-slate-500">Simple task manager</p>
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">Todo App</h1>
+            <p className="text-sm text-slate-500">Simple task manager</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+          />
+          Logout
         </div>
 
         {/* ローディング中表示 */}
