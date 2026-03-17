@@ -47,7 +47,7 @@ export function useTodos(user: User | null) {
     }
 
     load()
-  }, [])
+  }, [user])
 
   // POST: 新しいTodoを追加する関数
   const addTodo = async (text: string) => {
