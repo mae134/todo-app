@@ -2,7 +2,6 @@ import type { Todo } from '../types/todo'
 import { supabase } from '../lib/supabase'
 
 export async function getTodos(): Promise<Todo[]> {
-  //
   const { data, error } = await supabase
     .from('todos')
     .select('*')
@@ -14,7 +13,7 @@ export async function getTodos(): Promise<Todo[]> {
 
 export async function createTodo(text: string, userId: string): Promise<Todo> {
   const { data, error } = await supabase
-    .from('todo')
+    .from('todos')
     .insert([{ text, done: false, user_id: userId }])
     .select()
     .single()

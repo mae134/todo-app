@@ -114,8 +114,9 @@ function App() {
           <button
             onClick={handleLogout}
             className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
-          />
-          Logout
+          >
+            Logout
+          </button>
         </div>
 
         {/* ローディング中表示 */}

@@ -8,13 +8,13 @@ export async function getTodos(): Promise<Todo[]> {
   return res.json()
 }
 
-export async function createTodo(text: string): Promise<Todo> {
+export async function createTodo(text: string, userId: string): Promise<Todo> {
   const res = await fetch(API_BASE_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ text, done: false, user_id: 'local-user' }),
+    body: JSON.stringify({ text, done: false, user_id: userId }),
   })
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
