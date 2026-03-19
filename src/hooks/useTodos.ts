@@ -36,7 +36,7 @@ export function useTodos(user: User | null) {
       setError(null)
 
       try {
-        const res = await getTodos()
+        const res = await getTodos(user.id)
         setTodos(res)
       } catch (error) {
         setError('Failed to get todo')

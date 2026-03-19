@@ -1,10 +1,11 @@
 import type { Todo } from '../types/todo'
 import { supabase } from '../lib/supabase'
 
-export async function getTodos(): Promise<Todo[]> {
+export async function getTodos(userId: string): Promise<Todo[]> {
   const { data, error } = await supabase
     .from('todos')
     .select('*')
+    .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
   if (error) throw error
