@@ -103,7 +103,6 @@ function App() {
   ] as const
 
   return (
-    // 画面の高さを最低限確保する / 薄いグレー背景 / 左右の余白 / スマホで端にくっつかないようにする / 上下の余白 / 詰まって見えないようにする
     <div className="min-h-screen bg-slate-100 px-4 py-10">
       <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
         <div className="mb-6 flex items-start justify-between">
@@ -214,7 +213,6 @@ function App() {
 
         {/* タスクリストがないなら空状態UI表示 */}
         {filteredTodos.length === 0 ? (
-          // 大き目角丸 / 枠線をつける / 点線っぽい枠(空の状態をやわらかく見せやすい) / 薄いグレー枠 / 内側の余白 / テキストを中央揃え
           <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center">
             {/* 大き目の文字 / 太字 / 落ち着いた色 */}
             <p className="text-lg font-medium text-slate-600">No tasks yet</p>
