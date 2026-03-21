@@ -24,7 +24,7 @@ export async function createTodo(text: string, userId: string): Promise<Todo> {
 }
 
 export async function removeTodo(id: number): Promise<void> {
-  const { error } = await supabase.from('todo').delete().eq('id', id)
+  const { error } = await supabase.from('todos').delete().eq('id', id)
   if (error) throw error
 }
 
