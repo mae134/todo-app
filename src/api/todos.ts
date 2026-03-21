@@ -1,7 +1,7 @@
-import * as localApi from './todos.local'
 import * as supabaseApi from './todos.supabase'
 
-const todoApi = import.meta.env.DEV ? localApi : supabaseApi
+// Auth / RLS 対応後は、開発・本番ともに Supabase を使用する
+const todoApi = supabaseApi
 
 export const {
   getTodos,

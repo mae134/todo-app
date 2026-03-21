@@ -1,21 +1,21 @@
 import type { Todo } from '../types/todo'
 import { supabase } from '../lib/supabase'
 
-export async function getTodos(): Promise<Todo[]> {
-  //
+export async function getTodos(userId: string): Promise<Todo[]> {
   const { data, error } = await supabase
     .from('todos')
     .select('*')
-    .order('id', { ascending: true })
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
 
   if (error) throw error
   return data ?? []
 }
 
-export async function createTodo(text: string): Promise<Todo> {
+export async function createTodo(text: string, userId: string): Promise<Todo> {
   const { data, error } = await supabase
-    .from('todo')
-    .insert([{ text, done: false }])
+    .from('todos')
+    .insert([{ text, done: false, user_id: userId }])
     .select()
     .single()
 
@@ -24,7 +24,7 @@ export async function createTodo(text: string): Promise<Todo> {
 }
 
 export async function removeTodo(id: number): Promise<void> {
-  const { error } = await supabase.from('todo').delete().eq('id', id)
+  const { error } = await supabase.from('todos').delete().eq('id', id)
   if (error) throw error
 }
 

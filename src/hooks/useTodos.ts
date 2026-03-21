@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import type { User } from '@supabase/supabase-js'
 import type { Todo } from '../types/todo'
 
 import {
@@ -9,7 +10,7 @@ import {
   updateTodoText as updateTodoTextApi,
 } from '../api/todos'
 
-export function useTodos() {
+export function useTodos(user: User | null) {
   // 新しいTodoを追加中かどうかの状態
   const [adding, setAdding] = useState(false)
   // 削除中のTodoのIDを保持する状態
@@ -26,13 +27,16 @@ export function useTodos() {
   // GET: 初回ロード
   useEffect(() => {
     async function load() {
+      if (!user) {
+        setTodos([])
+        return
+      }
+
       setLoading(true)
       setError(null)
 
       try {
-        const res = await getTodos()
-
-        // 既存todo追加
+        const res = await getTodos(user.id)
         setTodos(res)
       } catch (error) {
         setError('Failed to get todo')
@@ -43,10 +47,11 @@ export function useTodos() {
     }
 
     load()
-  }, [])
+  }, [user])
 
   // POST: 新しいTodoを追加する関数
   const addTodo = async (text: string) => {
+    if (!user) return
     // 前後の空白を削除する 空の文字と空白は含めない
     if (text.trim() === '') return
 
@@ -54,9 +59,7 @@ export function useTodos() {
     setError(null)
 
     try {
-      const res = await createTodo(text)
-
-      // サーバーが返したTodoをStateに追加
+      const res = await createTodo(text, user.id)
       setTodos((prev) => [...prev, res])
     } catch (e) {
       console.error(e)
@@ -71,8 +74,6 @@ export function useTodos() {
     try {
       setDeletingId(id)
       setError(null)
-
-      // todo削除
       await removeTodo(id)
 
       // サーバー削除が成功したら、画面からも消す

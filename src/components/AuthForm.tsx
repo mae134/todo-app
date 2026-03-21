@@ -42,6 +42,10 @@ export function AuthForm() {
       }
     } catch (error) {
       console.error(error)
+
+      if (error instanceof Error && import.meta.env.DEV) {
+        setError(error.message)
+      }
       setError('Authentication failed')
     } finally {
       setLoading(false)
