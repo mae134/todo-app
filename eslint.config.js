@@ -23,6 +23,7 @@ export default [
         ...globals.node, // process / __dirname / Buffer などNode.jsのグローバル変数も解決されるようになる。
         fetch: 'readonly',
         test: 'readonly',
+        jest: 'readonly',
         expect: 'readonly',
         describe: 'readonly',
         it: 'readonly',
