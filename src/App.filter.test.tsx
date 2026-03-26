@@ -58,6 +58,7 @@ vi.mock('./lib/supabase', () => ({
 
 describe('filter buttons', () => {
   test('shows only active todos when Active is clicked', async () => {
+    // domにアクセスしたいのでレンダリング
     render(<App />)
 
     await waitFor(() => {
@@ -72,6 +73,7 @@ describe('filter buttons', () => {
   })
 
   test('shows only completed todos when Completed is clicked', async () => {
+    // domにアクセスしたいのでレンダリング
     render(<App />)
 
     await waitFor(() => {
@@ -86,6 +88,7 @@ describe('filter buttons', () => {
   })
 
   test('shows all todos when All is clicked', async () => {
+    // domにアクセスしたいのでレンダリング
     render(<App />)
 
     await waitFor(() => {

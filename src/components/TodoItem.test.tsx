@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { TodoItem } from './TodoItem'
 import userEvent from '@testing-library/user-event'
 import type { Todo } from '../types/todo'
+import { vi } from 'vitest'
 
 describe('TodoItem', () => {
   const todo: Todo = {
@@ -29,7 +30,7 @@ describe('TodoItem', () => {
 
   test('Deleteボタンを押すと onDelete が呼ばれる', async () => {
     const user = userEvent.setup()
-    const onDelete = jest.fn()
+    const onDelete = vi.fn()
 
     render(
       <TodoItem
