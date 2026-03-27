@@ -1,0 +1,211 @@
+import { useState } from 'react'
+import type { User } from '@supabase/supabase-js'
+import { TodoItem } from './TodoItem'
+import { useTodos } from '../hooks/useTodos'
+import { supabase } from '../lib/supabase'
+
+type Props = {
+  user: User
+}
+
+export function TodoPage({ user }: Props) {
+  // 今の入力内容状態、状態を変更する関数
+  const [inputText, setInputText] = useState('')
+  // 今のフィルター状態、状態を変更する関数。all,active,completedのみ文字列のセッターを受け付ける
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+
+  const {
+    todos,
+    addTodo,
+    deleteTodo,
+    toggleTodo,
+    updateTodoText,
+    loading,
+    adding,
+    deletingId,
+    togglingId,
+    error,
+  } = useTodos(user)
+
+  // ログアウトボタンが押されたときに実行する関数
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+  }
+
+  // タスクのaddボタンが押されたときに実行する関数
+  const handleAdd = () => {
+    addTodo(inputText)
+    setInputText('')
+  }
+
+  // 完了済みタスクを削除するボタンが押されたときに実行する関数
+  const handleClearComplete = async () => {
+    const completedTodos = todos.filter((todo) => todo.done)
+
+    for (const todo of completedTodos) {
+      await deleteTodo(todo.id)
+    }
+  }
+
+  const totalCount = todos.length
+  const completedCount = todos.filter((todo) => todo.done).length
+  const activeCount = totalCount - completedCount
+
+  // タスク完了済みの進捗率
+  const progressPercent =
+    totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100)
+
+  // aがtrueならb(未完了)を前にbがtrueならa(未完了)を前にする
+  const sortedTodos = [...todos].sort((a, b) => Number(a.done) - Number(b.done))
+
+  // フィルター処理
+  const filteredTodos = sortedTodos.filter((todo) => {
+    if (filter === 'active') return !todo.done
+    if (filter === 'completed') return todo.done
+    return true
+  })
+
+  // 表示するフィルター項目
+  const filterOptions = [
+    { label: 'All', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'Completed', value: 'completed' },
+  ] as const
+
+  return (
+    <div className="min-h-screen bg-slate-100 px-4 py-10">
+      <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">Todo App</h1>
+            <p className="text-sm text-slate-500">Simple task manager</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* ローディング中表示 */}
+        {loading && (
+          <p className="mb-4 rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
+            Loading...
+          </p>
+        )}
+
+        {/* エラー表示 */}
+        {error && (
+          <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
+        <div className="mb-6 flex gap-3">
+          {/* タスク入力領域 */}
+          <input
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleAdd()
+            }}
+            placeholder="Add a new task"
+            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 outline-none focus:ring focus:border"
+          />
+          {/* タスク追加ボタン */}
+          <button
+            onClick={handleAdd}
+            disabled={adding || !inputText.trim()}
+            className="rounded-xl bg-slate-800 px-5 py-3 text-white transition hover:bg-slate-700"
+          >
+            {adding ? 'Adding...' : 'Add'}
+          </button>
+        </div>
+
+        {/* タスクカウント表示 */}
+        <div className="mb-6 flex flex-wrap gap-2">
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
+            Total: {totalCount}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-green-600">
+            Completed: {completedCount}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
+            Active: {activeCount}
+          </span>
+        </div>
+
+        <div className="mb-6">
+          <div className="mb-2 flex items-center justify-between text-sm text-slate-600">
+            <span>Progress</span>
+            <span>{progressPercent}% completed</span>
+          </div>
+
+          {/* 完了済みタスクの進捗バー */}
+          <div className="h-2 w-full rounded-full bg-slate-200">
+            <div
+              className="h-2 rounded-full bg-slate-800 transition-all"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* 完了済みのタスクを削除するボタン */}
+        {completedCount > 0 && (
+          <div className="mb-6">
+            <button
+              onClick={handleClearComplete}
+              className="rounded-lg border border-red-200 px-3 py-2 text-sm text-red-500 transition hover:bg-red-50"
+            >
+              Clear completed ({completedCount})
+            </button>
+          </div>
+        )}
+
+        {/* フィルターボタンリスト */}
+        <div className="mb-6 flex gap-2">
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setFilter(option.value)}
+              className={`rounded-full px-3 py-1 text-sm transition ${
+                filter === option.value
+                  ? 'bg-slate-800 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        {/* タスクリストがないなら空状態UI表示 */}
+        {filteredTodos.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center">
+            <p className="text-lg font-medium text-slate-600">No tasks yet</p>
+            <p className="mt-2 text-sm text-slate-400">Add your first task</p>
+          </div>
+        ) : (
+          // スクロール範囲を固定
+          <div className="max-h-96 overflow-y-auto pr-1">
+            {/* タスクリスト表示 */}
+            <ul className="space-y-3">
+              {filteredTodos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  onToggleDone={toggleTodo}
+                  onDelete={deleteTodo}
+                  onUpdateTodoText={updateTodoText}
+                  deletingId={deletingId}
+                  togglingId={togglingId}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
