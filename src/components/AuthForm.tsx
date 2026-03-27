@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export function AuthForm() {
-  // ログイン状態
-  const [isLogin, setIsLogin] = useState(false)
+  // ログイン状態(初期はログイン画面を表示)
+  const [isLogin, setIsLogin] = useState(true)
   // emailの状態
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
