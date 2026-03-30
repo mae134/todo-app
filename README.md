@@ -48,6 +48,30 @@ https://todo-app-kohl-mu-20.vercel.app/
 | ESLint       | Linting                 |
 | Supabase     | Database / Auth / API   |
 
+## Testing
+
+This project uses Vitest and Testing Library for component testing.
+
+### Tested Components
+
+- TodoPage
+- AuthForm
+- TodoItem
+
+### Covered Behaviors
+
+- filtering todos
+- adding todos
+- progress display
+- login / sign up form behavior
+- todo item edit / save / cancel / delete interactions
+
+### Run Tests
+
+```bash
+npm run test
+```
+
 ## Setup
 
 ### 1. Clone repository
