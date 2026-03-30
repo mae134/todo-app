@@ -1,11 +1,19 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 import type { User } from '@supabase/supabase-js'
 import { TodoPage } from './TodoPage'
 import { supabase } from '../lib/supabase'
 
+const mockAddTodo = vi.fn()
 const mockDeleteTodo = vi.fn()
+const mockToggleTodo = vi.fn()
+const mockUpdateTodoText = vi.fn()
+
+// 前のテスト呼ばれた可能性があるので、呼ばれた回数を一応リセットしておく
+beforeEach(() => {
+  vi.clearAllMocks()
+})
 
 // useTodos をモック
 vi.mock('../hooks/useTodos', () => ({
@@ -26,10 +34,10 @@ vi.mock('../hooks/useTodos', () => ({
         created_at: '2026-03-25T00:00:01Z',
       },
     ],
-    addTodo: vi.fn(),
+    addTodo: mockAddTodo,
     deleteTodo: mockDeleteTodo,
-    toggleTodo: vi.fn(),
-    updateTodoText: vi.fn(),
+    toggleTodo: mockToggleTodo,
+    updateTodoText: mockUpdateTodoText,
     loading: false,
     adding: false,
     deletingId: null,
@@ -145,9 +153,6 @@ describe('Todoページ：Clear completed ボタンのテスト', () => {
   test('Clear completed をクリックすると、完了済みタスクの deleteTodo が呼ばれる', async () => {
     const user = userEvent.setup()
 
-    // 前のテスト呼ばれた可能性があるので、呼ばれた回数を一応リセットしておく
-    mockDeleteTodo.mockClear()
-
     // dom表示
     render(<TodoPage user={mockUser} />)
 
@@ -160,4 +165,83 @@ describe('Todoページ：Clear completed ボタンのテスト', () => {
     // mockDeleteTodoが何回呼ばれたか
     expect(mockDeleteTodo).toHaveBeenCalledTimes(1)
   })
+})
+
+test('完了率が正しく表示される（50%）', () => {
+  const mockUser = {
+    id: 'user-1',
+    email: 'test@example.com',
+  } as User
+
+  render(<TodoPage user={mockUser} />)
+
+  expect(screen.getByText('50% completed')).toBeInTheDocument()
+
+  const bar = screen.getByTestId('progress-bar')
+
+  expect(bar).toHaveStyle({ width: '50%' })
+})
+
+it('Addボタンを押すと addTodo が呼ばれる', async () => {
+  const mockUser = {
+    id: 'user-1',
+    email: 'test@example.com',
+  } as User
+
+  const user = userEvent.setup()
+
+  render(<TodoPage user={mockUser} />)
+
+  const input = screen.getByPlaceholderText('Add a new task')
+  const addButton = screen.getByRole('button', { name: 'Add' })
+
+  await user.type(input, 'new todo')
+  await user.click(addButton)
+
+  // 引数にデータがセットされているか
+  expect(mockAddTodo).toHaveBeenCalledWith('new todo')
+  expect(mockAddTodo).toHaveBeenCalledTimes(1)
+})
+
+test('入力が空のとき Add ボタンは disabled', () => {
+  const mockUser = {
+    id: 'user-1',
+    email: 'test@example.com',
+  } as User
+
+  render(<TodoPage user={mockUser} />)
+
+  const addButton = screen.getByRole('button', { name: 'Add' })
+  expect(addButton).toBeDisabled()
+})
+
+test('Enterキーを押すと addTodo が呼ばれる', async () => {
+  const mockUser = {
+    id: 'user-1',
+    email: 'test@example.com',
+  } as User
+
+  const user = userEvent.setup()
+
+  render(<TodoPage user={mockUser} />)
+
+  const input = screen.getByPlaceholderText('Add a new task')
+
+  await user.type(input, 'enter todo{enter}')
+
+  expect(mockAddTodo).toHaveBeenCalledWith('enter todo')
+  expect(mockAddTodo).toHaveBeenCalledTimes(1)
+})
+
+test('件数が正しく表示される', () => {
+  const mockUser = {
+    id: 'user-1',
+    email: 'test@example.com',
+  } as User
+
+  render(<TodoPage user={mockUser} />)
+
+  expect(screen.getByText('Total: 2')).toBeInTheDocument()
+  expect(screen.getByText('Completed: 1')).toBeInTheDocument()
+  expect(screen.getByText('Active: 1')).toBeInTheDocument()
 })
