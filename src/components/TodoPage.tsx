@@ -145,6 +145,7 @@ export function TodoPage({ user }: Props) {
           {/* 完了済みタスクの進捗バー */}
           <div className="h-2 w-full rounded-full bg-slate-200">
             <div
+              data-testid="progress-bar"
               className="h-2 rounded-full bg-slate-800 transition-all"
               style={{ width: `${progressPercent}%` }}
             ></div>
