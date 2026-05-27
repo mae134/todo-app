@@ -8,6 +8,9 @@ import prettier from 'eslint-plugin-prettier' // PrettierとESLintを連携さ�
 import prettierConfig from 'eslint-config-prettier' // Prettierと競合するESLintルールを無効化するための設定
 
 export default [
+  {
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '.vercel/**'],
+  },
   js.configs.recommended, // JavaScript用のESLintルールセット
   {
     files: ['**/*.{ts,tsx,js,mjs}'], // TypeScriptファイルに対してのルールを適用
